@@ -55,26 +55,30 @@ int main(int argc, char *argv[]) {
         for (int j = 0; j < 8; j++)
             d[i][j] = rand();
 
-    print(6, 8, d);
+    // print(6, 8, d);
 
     int min_d = -1, max_d = -1, cnt = -1, mean_d = -1; 
+    omp_set_num_threads(8);
+    printf("num threads: %d\n", omp_get_max_threads());
     #pragma omp parallel
     {
         #pragma omp sections
         {
             #pragma omp section
             {
-                
                 mean_d = mean(6, 8, d);
+                printf("Section 1, thread id: %d\n", omp_get_thread_num());
             }
             #pragma omp section
             {
                 min_d = min(6, 8, d);
                 max_d = max(6, 8, d);
+                printf("Section 2, thread id: %d\n", omp_get_thread_num());
             }
             #pragma omp section
             {
                 cnt = div3_count(6, 8, d);
+                printf("Section 3, thread id: %d\n", omp_get_thread_num());
             }
         }
     }
